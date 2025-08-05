@@ -3,7 +3,8 @@ import { TOKEN_AUTH_FAILED_TEST_ID, TOKEN_AUTH_FAILED_TITLE_TEST_ID } from '../.
 import { joinMuc, generateJaasToken as t } from '../helpers/jaas';
 
 setTestProperties(__filename, {
-    useJaas: true
+    useJaas: true,
+    usesBrowsers: [ 'p1' ]
 });
 
 describe('XMPP login and MUC join test', () => {

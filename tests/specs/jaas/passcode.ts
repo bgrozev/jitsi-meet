@@ -4,7 +4,8 @@ import { joinMuc, loadPage, generateJaasToken as t } from '../helpers/jaas';
 
 setTestProperties(__filename, {
     useJaas: true,
-    useWebhookProxy: true
+    useWebhookProxy: true,
+    usesBrowsers: [ 'p1', 'p2', 'p3' ]
 });
 
 const passcode = '1234';

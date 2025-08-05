@@ -55,6 +55,24 @@ const chromePreferences = {
     'intl.accept_languages': 'en-US'
 };
 
+const browsers = (process.env.BROWSERS || 'p1,p2,p3,p4').split(',');
+
+const capabilities = Object.fromEntries(
+    browsers.map(browser => [
+        browser,
+        {
+            capabilities: {
+                browserName: 'chrome',
+                ...(browser === 'p1' && process.env.BROWSER_CHROME_BETA ? { browserVersion: 'beta' } : {}),
+                'goog:chromeOptions': {
+                    args: chromeArgs,
+                    prefs: chromePreferences
+                }
+            }
+        }
+    ])
+);
+
 const TEST_RESULTS_DIR = 'test-results';
 
 export const config: WebdriverIO.MultiremoteConfig = {
@@ -85,61 +103,7 @@ export const config: WebdriverIO.MultiremoteConfig = {
         timeout: 180_000
     },
 
-    capabilities: {
-        // participant1
-        p1: {
-            capabilities: {
-                browserName: 'chrome',
-                browserVersion: process.env.BROWSER_CHROME_BETA ? 'beta' : undefined,
-                'goog:chromeOptions': {
-                    args: chromeArgs,
-                    prefs: chromePreferences
-                }
-            }
-        },
-        // participant2
-        p2: {
-            capabilities: {
-                browserName: 'chrome',
-                'goog:chromeOptions': {
-                    args: chromeArgs,
-                    prefs: chromePreferences
-                },
-                'wdio:exclude': [
-                    'specs/alone/**'
-                ]
-            }
-        },
-        // participant3
-        p3: {
-            capabilities: {
-                browserName: 'chrome',
-                'goog:chromeOptions': {
-                    args: chromeArgs,
-                    prefs: chromePreferences
-                },
-                'wdio:exclude': [
-                    'specs/alone/**',
-                    'specs/2way/**'
-                ]
-            }
-        },
-        // participant4
-        p4: {
-            capabilities: {
-                browserName: 'chrome',
-                'goog:chromeOptions': {
-                    args: chromeArgs,
-                    prefs: chromePreferences
-                },
-                'wdio:exclude': [
-                    'specs/alone/**',
-                    'specs/2way/**',
-                    'specs/3way/**'
-                ]
-            }
-        }
-    },
+    capabilities,
 
     // Level of logging verbosity: trace | debug | info | warn | error | silent
     logLevel: 'trace',
